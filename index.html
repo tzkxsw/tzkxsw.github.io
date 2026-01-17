@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球加速方案</title>
+    <style>
+        :root {
+            --anycast-main: #0066ff;
+            --anycast-bg: #eef4ff;
+            --coke-main: #ff4d4d;
+            --coke-bg: #fff5f5;
+            --ai-color: #8b5cf6;
+            --text-title: #1e293b;
+            --text-content: #475569;
+            --warning-bg: #fff1f2;
+            --warning-border: #fda4af;
+            --warning-text: #991b1b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-content);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* 顶部标题 */
+        .hero { text-align: center; padding: 40px 0; }
+        .hero h1 { font-size: 2.5rem; color: var(--text-title); margin-bottom: 10px; }
+        .hero p { font-size: 1.1rem; color: #64748b; }
+
+        /* 通用 AI 支持横幅 */
+        .universal-support {
+            background: linear-gradient(90deg, #f3e8ff, #e0e7ff);
+            border: 1px solid #ddd6fe;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: var(--ai-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 卡片布局 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 8px;
+        }
+
+        .anycast-card::before { background: var(--anycast-main); }
+        .coke-card::before { background: var(--coke-main); }
+        .explore-card::before { background: var(--ai-color); }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 15px 0;
+            display: flex;
+            align-items: baseline;
+        }
+        .anycast-card .price-tag { color: var(--anycast-main); }
+        .coke-card .price-tag { color: var(--coke-main); }
+        .price-tag span { font-size: 1rem; font-weight: normal; margin-left: 5px; color: #94a3b8; }
+
+        .desc { font-weight: 600; margin-bottom: 20px; color: var(--text-title); }
+
+        /* 节点展示优化 */
+        .node-section { margin-top: 20px; }
+        .node-group { margin-bottom: 15px; }
+        .node-group-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag {
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* 特点列表 */
+        .features { list-style: none; padding: 0; margin: 20px 0; }
+        .features li { margin-bottom: 10px; display: flex; align-items: flex-start; }
+        .features li::before { content: "✓"; margin-right: 10px; font-weight: bold; }
+        .anycast-card li::before { color: var(--anycast-main); }
+        .coke-card li::before { color: var(--coke-main); }
+
+        /* 按钮 */
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: auto;
+            transition: all 0.3s;
+        }
+        .btn-anycast { background: var(--anycast-main); color: white; }
+        .btn-anycast:hover { background: #0052cc; box-shadow: 0 4px 12px rgba(0,102,255,0.3); }
+        .btn-coke { background: var(--coke-main); color: white; }
+        .btn-coke:hover { background: #e63939; box-shadow: 0 4px 12px rgba(255,77,77,0.3); }
+
+        /* 新增：探索板块样式 */
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .explore-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .explore-icon { font-size: 1.5rem; margin-right: 15px; }
+        .explore-content strong { display: block; color: var(--text-title); margin-bottom: 4px; }
+        .explore-content p { margin: 0; font-size: 0.9rem; color: #64748b; }
+        .explore-link { 
+            display: inline-block; 
+            margin-top: 8px; 
+            color: var(--anycast-main); 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 0.9rem;
+        }
+        .explore-link:hover { text-decoration: underline; }
+
+        /* 购买警告链接样式 */
+        .purchase-warning {
+            margin-top: 25px;
+            display: grid;
+            gap: 12px;
+        }
+        .warning-link {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--warning-bg);
+            border: 1px dashed var(--warning-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--warning-text);
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .warning-link:hover { background: #ffe4e6; }
+        .warning-link span { margin-right: 10px; }
+
+        /* 底部说明 */
+        .footer-info {
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            border-left: 6px solid #fbbf24;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="hero">
+        <h1>全球网络加速指南</h1>
+        <p>为您的工作、娱乐与 AI 创作提供极致的网络支撑</p>
+    </header>
+
+    <div class="universal-support">
+        <span>🚀 全线支持：ChatGPT & Gemini</span>
+        <span>🎥 流媒体优化：Netflix & TikTok</span>
+        <span>🔍 搜索自由：Google & YouTube</span>
+    </div>
+
+    <div class="grid">
+        <div class="card anycast-card">
+            <h2>Anycast</h2>
+            <div class="desc">追求极致体验 · 无限流量追剧王</div>
+            <div class="price-tag">$6.99 <span>/ 月 (无限流量)</span></div>
+            
+            <ul class="features">
+                <li><strong>超大带宽：</strong>支持 4K 蓝光画质，无缓冲流畅看剧</li>
+                <li><strong>全能匹配：</strong>Netflix, HBO, Disney+, YouTube, TikTok</li>
+                <li><strong>全家桶支持：</strong>自带电脑、手机、iPad 客户端，一键下载使用</li>
+                <li><strong>无限流量：</strong>不限速、不限流，告别流量焦虑</li>
+            </ul>
+
+            <div class="node-section">
+                <span class="node-group-title">全球六大洲节点覆盖：</span>
+                <div class="node-group">
+                    <span class="node-group-title">【亚洲】</span>
+                    <div class="tags">
+                        <span class="tag">香港</span><span class="tag">日本</span><span class="tag">台湾</span><span class="tag">新加坡</span><span class="tag">韩国</span><span class="tag">马来</span><span class="tag">泰国</span><span class="tag">印尼</span><span class="tag">越南</span><span class="tag">印度</span><span class="tag">菲律宾</span><span class="tag">迪拜</span><span class="tag">沙特</span><span class="tag">卡塔尔</span>
+                    </div>
+                </div>
+                <div class="node-group">
+                    <span class="node-group-title">【北美/南美】</span>
+                    <div class="tags">
+                        <span class="tag">美国</span><span class="tag">加拿大</span><span class="tag">墨西哥</span><span class="tag">智利</span><span class="tag">巴西</span><span class="tag">阿根廷</span><span class="tag">哥伦比亚</span>
+                    </div>
+                </div>
+                <div class="node-group">
+                    <span class="node-group-title">【欧洲/大洋洲/非洲】</span>
+                    <div class="tags">
+                        <span class="tag">英国</span><span class="tag">德国</span><span class="tag">法国</span><span class="tag">西班牙</span><span class="tag">意大利</span><span class="tag">荷兰</span><span class="tag">俄罗斯</span><span class="tag">土耳其</span><span class="tag">澳大利亚</span><span class="tag">新西兰</span><span class="tag">南非</span><span class="tag">埃及</span>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="https://ip.harmonylink.net/share/k4y20r" target="_blank" rel="nofollow"  class="btn btn-anycast">立即获取 Anycast</a>
+        </div>
+
+        <div class="card coke-card">
+            <h2>𝘾𝙤𝙠𝙚𝘾𝙡𝙤𝙪𝙙</h2>
+            <div class="desc">高性价比之选 · 社交媒体达人首选</div>
+            <div class="price-tag">¥9.90 <span>/ 月 (300GB 流量)</span></div>
+            
+            <ul class="features">
+                <li><strong>轻量级首选：</strong>适合 TikTok 运营、刷 FB、X、Instagram</li>
+                <li><strong>超高性价比：</strong>每月 300GB（流量看套餐），满足日常社交与办公</li>
+                <li><strong>多协议支持：</strong>支持小火箭 (Shadowrocket), Clash, V2ray</li>
+                <li><strong>一键客户端：</strong>官方提供 Windows / Mac / Android 客户端</li>
+            </ul>
+
+            <div class="node-section">
+                <span class="node-group-title">核心国家节点：</span>
+                <div class="tags">
+                    <span class="tag">香港</span><span class="tag">日本</span><span class="tag">美国</span><span class="tag">英国</span><span class="tag">新加坡</span><span class="tag">韩国</span><span class="tag">德国</span><span class="tag">土耳其</span><span class="tag">马来西亚</span><span class="tag">印度</span><span class="tag">泰国</span><span class="tag">越南</span><span class="tag">澳大利亚</span><span class="tag">俄罗斯</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 15px; background: var(--coke-bg); border-radius: 12px; font-size: 0.9rem; color: #b91c1c;">
+                <strong>💡 运营建议：</strong>适合对固定流量有需求、追求价格极致优惠的跨境电商或社媒个人用户。
+            </div>
+            
+            <a href="https://cokecloud.cyou/#/register?code=ZXBdRf8c" target="_blank" rel="nofollow" class="btn btn-coke">进入 CokeCloud 官网</a>
+        </div>
+    </div>
+
+    <div class="card explore-card">
+        <h2 style="color: var(--ai-color);">🌍 科学上网后能干什么？</h2>
+        <p>连接全球互联网，开启无限可能</p>
+        
+        <div class="explore-grid">
+            <div class="explore-item">
+                <span class="explore-icon">📺</span>
+                <div class="explore-content">
+                    <strong>YouTube</strong>
+                    <p>世界上最大的视频分享平台</p>
+                    <a href="https://www.youtube.com" target="_blank" class="explore-link">点击前往 →</a>
+                </div>
+            </div>
+            <div class="explore-item">
+                <span class="explore-icon">🤖</span>
+                <div class="explore-content">
+                    <strong>ChatGPT</strong>
+                    <p>全球领先的人工智能助手</p>
+                    <a href="https://chat.openai.com" target="_blank" class="explore-link">点击前往 →</a>
+                </div>
+            </div>
+            <div class="explore-item">
+                <span class="explore-icon">🔍</span>
+                <div class="explore-content">
+                    <strong>Google</strong>
+                    <p>最强大的搜索引擎与工具集</p>
+                    <a href="https://www.google.com" target="_blank" class="explore-link">点击前往 →</a>
+                </div>
+            </div>
+            <div class="explore-item">
+                <span class="explore-icon">🧑‍🤝‍🧑</span>
+                <div class="explore-content">
+                    <strong>社交平台</strong>
+                    <p>Twitter(X), Facebook, Instagram</p>
+                </div>
+            </div>
+            <div class="explore-item">
+                <span class="explore-icon">📱</span>
+                <div class="explore-content">
+                    <strong>即时通信</strong>
+                    <p>Telegram（电报、纸飞机、TG）</p>
+                </div>
+            </div>
+            <div class="explore-item">
+                <span class="explore-icon">🎥</span>
+                <div class="explore-content">
+                    <strong>顶级流媒体</strong>
+                    <p>Netflix, HBO, Disney+</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="purchase-warning">
+            <a href="https://xiaohuojian8.com/aff/5655.html" target="_blank" rel="nofollow"  class="warning-link">
+                <span>⚠️</span> 如果您需要 Telegram, Gmail, ChatGPT, Twitter 账号可点击此处前往购买
+            </a>
+            <a href="https://ip.harmonylink.net/share/k4y20r" target="_blank" rel="nofollow"  class="warning-link">
+                <span>⚠️</span> 如果您需要 Netflix, Disney+, HBO 会员账号可点击此处前往购买
+            </a>
+        </div>
+    </div>
+
+    <div class="footer-info">
+        <strong>🛡️ Mac 用户安装指南：</strong><br>
+        若系统提示“无法打开，来自身份不明的开发者”，请前往：<b>系统设置 → 隐私与安全性 → 安全性</b>，点击 <b>“仍要打开”</b>。
+    </div>
+</div>
+
+</body>
+</html>
